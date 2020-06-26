@@ -38,7 +38,7 @@ class Products with ChangeNotifier {
     ),
   ];
 
-  var _showFavoritesOnly = false;
+  //var _showFavoritesOnly = false;
 
   Product findById(String id) {
     return _items.firstWhere((product) => product.id == id);
