@@ -37,22 +37,7 @@ class Products with ChangeNotifier {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
-
-  //var _showFavoritesOnly = false;
-
-  Product findById(String id) {
-    return _items.firstWhere((product) => product.id == id);
-  }
-
-  // void showFavoriteOnly() {
-  //   _showFavoritesOnly = true;
-  //   notifyListeners();
-  // }
-
-  // void showAll() {
-  //   _showFavoritesOnly = false;
-  //   notifyListeners();
-  // }
+  // var _showFavoritesOnly = false;
 
   List<Product> get items {
     // if (_showFavoritesOnly) {
@@ -63,5 +48,43 @@ class Products with ChangeNotifier {
 
   List<Product> get favoriteItems {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
+  }
+
+  Product findById(String id) {
+    return _items.firstWhere((prod) => prod.id == id);
+  }
+
+  // void showFavoritesOnly() {
+  //   _showFavoritesOnly = true;
+  //   notifyListeners();
+  // }
+
+  // void showAll() {
+  //   _showFavoritesOnly = false;
+  //   notifyListeners();
+  // }
+
+  void addProduct(Product product) {
+    final newProduct = Product(
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      id: DateTime.now().toString(),
+    );
+    _items.add(newProduct);
+    //_items.insert(0, newProduct); // at the start of the list
+    notifyListeners();
+  }
+
+  void updateProduct(String id, Product updatedProduct) {
+    final prodIndex = _items.indexWhere((prod) => prod.id == id);
+    _items[prodIndex] = updatedProduct;
+    notifyListeners();
+  }
+
+  void deleteProduct(String id) {
+    _items.removeWhere((prod) => prod.id == id);
+    notifyListeners();
   }
 }

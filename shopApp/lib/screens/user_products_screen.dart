@@ -6,16 +6,15 @@ import '../widgets/user_product_item.dart';
 import '../widgets/app_drawer.dart';
 import './edit_product_screen.dart';
 
-class UserProductScreen extends StatelessWidget {
+class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
+
   @override
   Widget build(BuildContext context) {
-    final productsData = context.watch<Products>();
+    final productsData = Provider.of<Products>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Your Products',
-        ),
+        title: const Text('Your Products'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
@@ -27,12 +26,13 @@ class UserProductScreen extends StatelessWidget {
       ),
       drawer: AppDrawer(),
       body: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8),
         child: ListView.builder(
           itemCount: productsData.items.length,
           itemBuilder: (_, i) => Column(
-            children: <Widget>[
+            children: [
               UserProductItem(
+                productsData.items[i].id,
                 productsData.items[i].title,
                 productsData.items[i].imageUrl,
               ),
