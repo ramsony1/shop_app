@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shopApp/widgets/products_grid.dart';
 
 import './product.dart';
 
@@ -67,21 +68,42 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> addProduct(Product product) {
-    const url = 'https://my-shop-app-7625a.firebaseio.com/products.j';
-    return http
-        .post(
-      url,
-      body: json.encode({
-        'title': product.title,
-        'description': product.description,
-        'imageUrl': product.imageUrl,
-        'price': product.price,
-        'isFavorite': product.isFavorite,
-      }),
-    )
-        .then((response) {
-      print(jsonDecode(response.body));
+  Future<void> fetchAndSetProducts() async {
+    const url = 'https://my-shop-app-7625a.firebaseio.com/products.json';
+    try {
+      final response = await http.get(url);
+      final extractionData = json.decode(response.body) as Map<String, dynamic>;
+      final List<Product> loadedProducts = [];
+      extractionData.forEach((prodId, prodData) {
+        loadedProducts.add(Product(
+          id: prodId,
+          title: prodData['title'],
+          description: prodData['description'],
+          price: prodData['price'],
+          isFavorite: prodData['isFavorite'],
+          imageUrl: prodData['imageUrl'],
+        ));
+      });
+      _items = loadedProducts;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+
+  Future<void> addProduct(Product product) async {
+    const url = 'https://my-shop-app-7625a.firebaseio.com/products.json';
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({
+          'title': product.title,
+          'description': product.description,
+          'imageUrl': product.imageUrl,
+          'price': product.price,
+          'isFavorite': product.isFavorite,
+        }),
+      );
       final newProduct = Product(
         title: product.title,
         description: product.description,
@@ -92,16 +114,29 @@ class Products with ChangeNotifier {
       _items.add(newProduct);
       //_items.insert(0, newProduct); // at the start of the list
       notifyListeners();
-    }).catchError((error) {
+    } catch (error) {
       print(error);
       throw error;
-    });
+    }
   }
 
-  void updateProduct(String id, Product updatedProduct) {
+  Future updateProduct(String id, Product updatedProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
-    _items[prodIndex] = updatedProduct;
-    notifyListeners();
+    if (prodIndex >= 0) {
+      final url = 'https://my-shop-app-7625a.firebaseio.com/products/$id.json';
+      await http.patch(url,
+          body: json.encode({
+            'title': updatedProduct.title,
+            'description': updatedProduct.description,
+            'imageUrl': updatedProduct.imageUrl,
+            'price': updatedProduct.price,
+          }));
+
+      _items[prodIndex] = updatedProduct;
+      notifyListeners();
+    } else {
+      print('...');
+    }
   }
 
   void deleteProduct(String id) {
