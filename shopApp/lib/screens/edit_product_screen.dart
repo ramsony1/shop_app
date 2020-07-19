@@ -26,11 +26,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   );
   var _initValues = {
     'title': '',
-    'price': '',
     'description': '',
+    'price': '',
     'imageUrl': '',
   };
-
   var _isInit = true;
   var _isLoading = false;
 
@@ -45,20 +44,19 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (_isInit) {
       final productId = ModalRoute.of(context).settings.arguments as String;
       if (productId != null) {
-        //Provider.of<Products>(context).findById(productId)
-        _editedProduct = context.read<Products>().findById(productId);
+        _editedProduct =
+            Provider.of<Products>(context, listen: false).findById(productId);
         _initValues = {
           'title': _editedProduct.title,
-          'price': _editedProduct.price.toString(),
           'description': _editedProduct.description,
-          //'imageUrl': _editedProduct.imageUrl, not do this becouse we alredy set imageController
-          'imageUrl': null,
+          'price': _editedProduct.price.toString(),
+          // 'imageUrl': _editedProduct.imageUrl,
+          'imageUrl': '',
         };
         _imageUrlController.text = _editedProduct.imageUrl;
       }
     }
     _isInit = false;
-
     super.didChangeDependencies();
   }
 
@@ -95,39 +93,39 @@ class _EditProductScreenState extends State<EditProductScreen> {
       _isLoading = true;
     });
     if (_editedProduct.id != null) {
-      await Provider.of<Products>(context, listen: false)
+      Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
-     
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
     } else {
       try {
         await Provider.of<Products>(context, listen: false)
             .addProduct(_editedProduct);
       } catch (error) {
         await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text('An error occurred'),
-                  content: Text('Something went wrong.'),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text('Okey'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ));
-      // } finally {
-      //   setState(() {
-      //     _isLoading = false;
-      //   });
-      //   Navigator.of(context).pop();
-      // }
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('An error occurred!'),
+            content: Text('Something went wrong.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              )
+            ],
+          ),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
+      }
     }
-     setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop();
     // Navigator.of(context).pop();
   }
 
@@ -168,13 +166,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       },
                       onSaved: (value) {
                         _editedProduct = Product(
-                          title: value,
-                          price: _editedProduct.price,
-                          description: _editedProduct.description,
-                          imageUrl: _editedProduct.imageUrl,
-                          id: _editedProduct.id,
-                          isFavorite: _editedProduct.isFavorite,
-                        );
+                            title: value,
+                            price: _editedProduct.price,
+                            description: _editedProduct.description,
+                            imageUrl: _editedProduct.imageUrl,
+                            id: _editedProduct.id,
+                            isFavorite: _editedProduct.isFavorite);
                       },
                     ),
                     TextFormField(
@@ -201,13 +198,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       },
                       onSaved: (value) {
                         _editedProduct = Product(
-                          title: _editedProduct.title,
-                          price: double.parse(value),
-                          description: _editedProduct.description,
-                          imageUrl: _editedProduct.imageUrl,
-                          id: _editedProduct.id,
-                          isFavorite: _editedProduct.isFavorite,
-                        );
+                            title: _editedProduct.title,
+                            price: double.parse(value),
+                            description: _editedProduct.description,
+                            imageUrl: _editedProduct.imageUrl,
+                            id: _editedProduct.id,
+                            isFavorite: _editedProduct.isFavorite);
                       },
                     ),
                     TextFormField(
