@@ -69,7 +69,7 @@ class Products with ChangeNotifier {
   // }
 
   Future<void> fetchAndSetProducts() async {
-    const url = 'https://my-shop-app-7625a.firebaseio.com/products.json';
+    const url = 'https://my-shop-app-fc71f.firebaseio.com/products.json';
     try {
       final response = await http.get(url);
       final extractionData = json.decode(response.body) as Map<String, dynamic>;
@@ -92,7 +92,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const url = 'https://my-shop-app-7625a.firebaseio.com/products.json';
+    const url = 'https://my-shop-app-fc71f.firebaseio.com/products.json';
     try {
       final response = await http.post(
         url,
@@ -123,7 +123,7 @@ class Products with ChangeNotifier {
   Future updateProduct(String id, Product updatedProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      final url = 'https://my-shop-app-7625a.firebaseio.com/products/$id.json';
+      final url = 'https://my-shop-app-fc71f.firebaseio.com/products/$id.json';
       await http.patch(url,
           body: json.encode({
             'title': updatedProduct.title,
@@ -140,7 +140,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = 'https://my-shop-app-7625a.firebaseio.com/products/$id.json';
+    final url = 'https://my-shop-app-fc71f.firebaseio.com/products/$id.json';
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
 
