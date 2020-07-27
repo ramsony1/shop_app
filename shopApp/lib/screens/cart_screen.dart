@@ -11,6 +11,35 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
+    var children2 = <Widget>[
+      Text(
+        'Total',
+        style: TextStyle(fontSize: 20),
+      ),
+      Spacer(),
+      Chip(
+        label: Text(
+          '\$${cart.totalAmount.toStringAsFixed(2)}',
+          style: TextStyle(
+            color: Theme.of(context).primaryTextTheme.headline6.color,
+          ),
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      FlatButton(
+        child: Text('ORDER NOW'),
+        onPressed: cart.totalAmount <= 0
+            ? null
+            : () {
+                Provider.of<Orders>(context, listen: false).addOrder(
+                  cart.items.values.toList(),
+                  cart.totalAmount,
+                );
+                cart.clear();
+              },
+        textColor: Theme.of(context).primaryColor,
+      ),
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Cart'),
@@ -23,34 +52,7 @@ class CartScreen extends StatelessWidget {
               padding: EdgeInsets.all(8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Total',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Spacer(),
-                  Chip(
-                    label: Text(
-                      '\$${cart.totalAmount.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        color:
-                            Theme.of(context).primaryTextTheme.headline6.color,
-                      ),
-                    ),
-                    backgroundColor: Theme.of(context).primaryColor,
-                  ),
-                  FlatButton(
-                    child: Text('ORDER NOW'),
-                    onPressed: () {
-                      Provider.of<Orders>(context, listen: false).addOrder(
-                        cart.items.values.toList(),
-                        cart.totalAmount,
-                      );
-                      cart.clear();
-                    },
-                    textColor: Theme.of(context).primaryColor,
-                  )
-                ],
+                children: children2,
               ),
             ),
           ),
