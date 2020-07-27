@@ -55,4 +55,10 @@ class Orders with ChangeNotifier {
     );
     notifyListeners();
   }
+
+  Future<void> fetchAndOrders() async {
+    const url = 'https://my-shop-app-fc71f.firebaseio.com/orders.json';
+    final response = await http.get(url);
+    print(json.decode(response.body));
+  }
 }
