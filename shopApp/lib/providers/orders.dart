@@ -59,7 +59,7 @@ class Orders with ChangeNotifier {
   Future<void> fetchAndOrders() async {
     const url = 'https://my-shop-app-fc71f.firebaseio.com/orders.json';
     final response = await http.get(url);
-    print(json.decode(response.body));
+    //print(json.decode(response.body));
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     if (extractedData == null) {
