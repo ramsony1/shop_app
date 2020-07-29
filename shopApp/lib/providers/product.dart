@@ -29,7 +29,7 @@ class Product with ChangeNotifier {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
-    final url = 'https://my-shop-app-fc71f.firebaseio.com/products/$id.json';
+    final url = 'https://my-shop-9a8bc.firebaseio.com/products/$id.json';
     try {
       final response = await http.patch(
         url,
