@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/orders.dart' show Orders;
-import '../widgets/order_item.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/order_item.dart';
 
 class OrdersScreen extends StatelessWidget {
   static const routeName = '/orders';
@@ -53,7 +53,8 @@ class OrdersScreen extends StatelessWidget {
         drawer: AppDrawer(),
         //Altenative to initState -> FutureBuilder()
         body: FutureBuilder(
-          future: Provider.of<Orders>(context, listen: false).fetchAndOrders(),
+          future:
+              Provider.of<Orders>(context, listen: false).fetchAndSetOrders(),
           builder: (context, dataSnapshot) {
             if (dataSnapshot.connectionState == ConnectionState.waiting) {
               return Center(
