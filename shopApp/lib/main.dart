@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopApp/screens/auth_screen.dart';
+import 'package:shopApp/screens/product_overview_screen.dart';
 
 import './providers/auth.dart';
 import './providers/cart.dart';
@@ -32,21 +33,25 @@ class MyApp extends StatelessWidget {
           value: Orders(),
         ),
       ],
-      child: MaterialApp(
+      child: Consumer<Auth>(
+        //when ever the Auth change the material app rebuild
+        builder: (context, authData, _) => MaterialApp(
           title: 'MyShop',
           theme: ThemeData(
             primarySwatch: Colors.purple,
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato',
           ),
-          home: AuthScreen(),
+          home: authData.isAuth ? ProductsOverviewScreen() : AuthScreen(),
           routes: {
             ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
             CartScreen.routeName: (ctx) => CartScreen(),
             OrdersScreen.routeName: (ctx) => OrdersScreen(),
             UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
             EditProductScreen.routeName: (ctx) => EditProductScreen(),
-          }),
+          },
+        ),
+      ),
     );
   }
 }
