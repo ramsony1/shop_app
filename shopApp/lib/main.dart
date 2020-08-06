@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
           update: (context, auth, previousOrders) => Orders(
             auth.token,
             previousOrders == null ? [] : previousOrders,
+            auth.userId,
           ),
         ),
       ],
